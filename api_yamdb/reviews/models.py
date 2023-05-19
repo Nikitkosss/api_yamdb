@@ -31,19 +31,23 @@ class Genre(models.Model):
 class Title(models.Model):
     category = models.ForeignKey(
         Сategory,
-        on_delete=models.CASCADE,
+        blank=True,
+        null=True,
+        on_delete=models.SET_NULL,
         related_name='titles',
         verbose_name='Категория'
     )
     genre = models.ForeignKey(
         Genre,
-        on_delete=models.CASCADE,
+        blank=True,
+        null=True,
+        on_delete=models.SET_NULL,
         related_name='titles',
         verbose_name='Жанр'
     )
     description = models.TextField(
         max_length=500,
-        verbose_name='Название произведения'
+        verbose_name='Описание'
     )
     name = models.TextField(
         max_length=256,
