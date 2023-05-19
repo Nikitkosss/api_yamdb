@@ -11,7 +11,7 @@ class Сategory(models.Model):
         verbose_name='Подзаголовок',
     )
     name = models.TextField(
-        max_length=256,
+        max_length=100,
         verbose_name='Название категории'
     )
 
