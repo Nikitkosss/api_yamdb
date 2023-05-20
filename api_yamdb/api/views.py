@@ -9,7 +9,7 @@ from reviews.models import Genre, Title, Сategory
 class CategoriesViewSet(viewsets.ModelViewSet):
     queryset = Сategory.objects.all()
     serializer_class = СategorySerializer
-    filter_backends = (filters.SearchFilter)
+    filter_backends = (filters.SearchFilter,)
     search_fields = ('name',)
     pagination_class = None
 
@@ -17,7 +17,7 @@ class CategoriesViewSet(viewsets.ModelViewSet):
 class GenresViewSet(viewsets.ModelViewSet):
     queryset = Genre.objects.all()
     serializer_class = GenreSerializer
-    filter_backends = (filters.SearchFilter)
+    filter_backends = (filters.SearchFilter,)
     search_fields = ('name',)
     pagination_class = None
 
