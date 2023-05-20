@@ -1,6 +1,5 @@
 from django.contrib.auth import get_user_model
 from django.db import models
-from datetime import date
 
 User = get_user_model()
 
@@ -12,7 +11,7 @@ class Сategory(models.Model):
         verbose_name='Подзаголовок',
     )
     name = models.TextField(
-        max_length=100,
+        max_length=256,
         verbose_name='Название категории'
     )
 
@@ -32,7 +31,6 @@ class Genre(models.Model):
 class Title(models.Model):
     category = models.ForeignKey(
         Сategory,
-        blank=True,
         null=True,
         on_delete=models.SET_NULL,
         related_name='titles',
@@ -40,7 +38,7 @@ class Title(models.Model):
     )
     genre = models.ManyToManyField(
         Genre,
-        related_name='titles',
+        related_name='genre_titles',
         verbose_name='Жанр'
     )
     description = models.TextField(
@@ -51,9 +49,8 @@ class Title(models.Model):
         max_length=256,
         verbose_name='Название произведения'
     )
-    year = models.DateTimeField(
+    year = models.IntegerField(
         verbose_name='Год выпуска',
-        default=date.year,
     )
 
     def __str__(self):
