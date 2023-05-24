@@ -31,8 +31,7 @@ class Genre(models.Model):
 class Title(models.Model):
     category = models.ForeignKey(
         Сategory,
-        null=True,
-        on_delete=models.SET_NULL,
+        on_delete=models.PROTECT,
         related_name='titles',
         verbose_name='Категория'
     )
@@ -43,6 +42,8 @@ class Title(models.Model):
     )
     description = models.TextField(
         max_length=500,
+        null=True,
+        blank=True,
         verbose_name='Описание'
     )
     name = models.TextField(
