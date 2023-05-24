@@ -1,16 +1,16 @@
-from django.core.mail import send_mail
+from api.serializers import (GenreSerializer, SignUpSerializer,
+                             TitleSerializer, TokenSerializer,
+                             СategorySerializer)
 from django.contrib.auth.tokens import default_token_generator
+from django.core.mail import send_mail
 from django.shortcuts import get_object_or_404
-from reviews.models import User
-
-from rest_framework import status
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import filters, status, viewsets
 from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import AccessToken
-from rest_framework.permissions import AllowAny
-
-
-from .serializers import (SignUpSerializer,TokenSerializer)
+from reviews.models import Genre, Title, User, Сategory
 
 
 def send_confirmation_code(username):
@@ -69,3 +69,26 @@ def get_token(request):
                         status=status.HTTP_200_OK)
     return Response('Код подтверждения неверный',
                     status=status.HTTP_400_BAD_REQUEST)
+
+
+class CategoriesViewSet(viewsets.ModelViewSet):
+    queryset = Сategory.objects.all()
+    serializer_class = СategorySerializer
+    filter_backends = (filters.SearchFilter,)
+    search_fields = ('name',)
+    pagination_class = None
+
+
+class GenresViewSet(viewsets.ModelViewSet):
+    queryset = Genre.objects.all()
+    serializer_class = GenreSerializer
+    filter_backends = (filters.SearchFilter,)
+    search_fields = ('name',)
+    pagination_class = None
+
+
+class TitlesViewSet(viewsets.ModelViewSet):
+    queryset = Title.objects.all()
+    serializer_class = TitleSerializer
+    filter_backends = (DjangoFilterBackend,)
+    filterset_fields = ('category', 'genre', 'name', 'year')
