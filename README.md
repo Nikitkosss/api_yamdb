@@ -20,7 +20,8 @@
 ***
 * Python 3.9 
 * Django 3.2 
-* Django Rest Framework 
+* Django Rest Framework
+* SQlite3
 ***
 
 ### Как запустить проект в dev-режиме:
