@@ -3,8 +3,8 @@
 ## Команда разработки:
 
 - :sunglasses: [Никита Пискунов (в роли Python-разработчика Тимлид - разработчик 2)](https://github.com/Nikitkosss)
-- :white_check_mark: [Николай Ибраев (в роли Python-разработчика - разработчик 1)](https://github.com/Melnik-ni)
-- :white_check_mark: [Вячеслав Мельников роль (в роли Python-разработчика - разработчик 3)](https://github.com/ViacheslavMelnikov)
+- :dizzy_face: [Николай Ибраев (в роли Python-разработчика - разработчик 1)](https://github.com/Melnik-ni)
+- :bowtie: [Вячеслав Мельников роль (в роли Python-разработчика - разработчик 3)](https://github.com/ViacheslavMelnikov)
 
 ### Описание
 Проект YaMDb собирает отзывы пользователей на произведения. Сами произведения в YaMDb не хранятся, здесь нельзя посмотреть фильм или послушать музыку.
