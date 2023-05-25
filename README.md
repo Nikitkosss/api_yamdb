@@ -2,7 +2,7 @@
 
 ## Команда разработки:
 
-- :white_check_mark: [Никита Пискунов (в роли Python-разработчика Тимлид - разработчик 2)](https://github.com/Nikitkosss)
+- :sunglasses: [Никита Пискунов (в роли Python-разработчика Тимлид - разработчик 2)](https://github.com/Nikitkosss)
 - :white_check_mark: [Николай Ибраев (в роли Python-разработчика - разработчик 1)](https://github.com/Melnik-ni)
 - :white_check_mark: [Вячеслав Мельников роль (в роли Python-разработчика - разработчик 3)](https://github.com/ViacheslavMelnikov)
 
