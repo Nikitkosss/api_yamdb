@@ -72,9 +72,10 @@ class ReviewSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Review
-        # fields = '__all__'
-        exclude = ('title',)
-        read_only_fields = ('author', 'title')
+        fields = '__all__'
+        # fields =('id', 'text', 'author', 'score', 'pub_date')
+        #exclude = ('title',)
+        read_only_fields = ('title', )
         # многократно используемый валидатор
         validators = [
             serializers.UniqueTogetherValidator(
