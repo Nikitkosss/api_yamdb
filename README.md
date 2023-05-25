@@ -1,6 +1,6 @@
 # Учебный проект YaMDb
 
-##Команда разработки:
+## Команда разработки:
 
 - :white_check_mark: [Никита Пискунов (в роли Python-разработчика Тимлид - разработчик 2)](https://github.com/Nikitkosss)
 - :white_check_mark: [Николай Ибраев (в роли Python-разработчика - разработчик 1)](https://github.com/Melnik-ni)
