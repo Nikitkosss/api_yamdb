@@ -72,18 +72,8 @@ class ReviewSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Review
-        fields = '__all__'
-        # fields =('id', 'text', 'author', 'score', 'pub_date')
-        #exclude = ('title',)
-        read_only_fields = ('title', )
-        # многократно используемый валидатор
-        validators = [
-            serializers.UniqueTogetherValidator(
-                queryset=Review.objects.all(),
-                fields=['title', 'author'],
-                message='Отзыв на это произведение Вами уже написан!'
-            )
-        ]
+        fields =('id', 'text', 'author', 'score', 'pub_date')
+        read_only_fields = ('author', 'title')
 
 
 class CommentSerializer(serializers.ModelSerializer):
