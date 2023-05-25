@@ -1,36 +1,9 @@
 import datetime as dt
-
+from django.contrib.auth import get_user_model
 from rest_framework import serializers
-from reviews.models import Genre, Title, User, Сategory, Comment, Review
+from reviews.models import Genre, Title, Сategory, Comment, Review
 
-
-class SignUpSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ('email', 'username')
-
-    def validate_username(self, username):
-        if username == 'me':
-            raise serializers.ValidationError(
-                'Имя пользователя не может быть "me".'
-            )
-        return username
-
-
-class TokenSerializer(serializers.Serializer):
-    username = serializers.CharField()
-    confirmation_code = serializers.CharField()
-
-    class Meta:
-        model = User
-        fields = ('username', 'confirmation_code')
-
-
-class UserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = '__all__'
-
+User = get_user_model()
 
 class СategorySerializer(serializers.ModelSerializer):
     class Meta:
