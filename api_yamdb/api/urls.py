@@ -1,5 +1,5 @@
 from api.views import (CategoriesViewSet, CommentsViewSet, GenresViewSet,
-                       ReviewsViewSet, TitlesViewSet, get_token, signup)
+                       ReviewsViewSet, OneReviewsViewSet, TitlesViewSet, get_token, signup)
 from django.urls import include, path
 from rest_framework import routers
 
@@ -13,6 +13,7 @@ v1_router.register(
     ReviewsViewSet,
     basename='reviews'
 )
+
 
 v1_router.register(
     'titles/(?P<title_id>\\d+)/reviews/(?P<review_id>\\d+)/comments',

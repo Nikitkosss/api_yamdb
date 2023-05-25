@@ -98,7 +98,6 @@ class TitlesViewSet(viewsets.ModelViewSet):
 
 
 class ReviewsViewSet(viewsets.ModelViewSet):
-    # queryset = Review.objects.all()
     serializer_class = ReviewSerializer
     filter_backends = (DjangoFilterBackend,)
     filterset_fields = ('text', 'author', 'title')
@@ -116,6 +115,25 @@ class ReviewsViewSet(viewsets.ModelViewSet):
                 'Отзыв на это произведение Вами уже написан!'
             )
         serializer.save(author=self.request.user, title=title)
+
+
+class OneReviewsViewSet(viewsets.ModelViewSet):
+    serializer_class = ReviewSerializer
+    filter_backends = (DjangoFilterBackend,)
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly,
+                          IsAuthorOrReadOnly]
+    
+    def get_queryset(self):
+        title = get_object_or_404(Title, pk=self.kwargs.get('review_id'))
+        return title.review
+
+    def perform_update(self, serializer):
+        title = get_object_or_404(Title, pk=self.kwargs.get('review_id'))
+        serializer.save(author=self.request.user, title=title)
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        self.perform_destroy(instance)
 
 
 class CommentsViewSet(viewsets.ModelViewSet):
