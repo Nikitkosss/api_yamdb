@@ -18,9 +18,9 @@
 
 ### Технологии
 ***
-Python 3.9 
-Django 3.2 
-Django Rest Framework 
+* Python 3.9 
+* Django 3.2 
+* Django Rest Framework 
 ***
 
 ### Как запустить проект в dev-режиме:
