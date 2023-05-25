@@ -105,8 +105,9 @@ class ReviewsViewSet(viewsets.ModelViewSet):
                           IsAuthorOrReadOnly]
     
     def get_queryset(self):
-        title = get_object_or_404(Title, pk=self.kwargs.get('title_id'))
-        return title.reviews
+        if self.kwargs.get('review_id'):
+            return Review.objects.filter(pk=self.kwargs.get('review_id'))
+        return Review.objects.filter(title=self.kwargs.get('title_id'))
 
     def perform_create(self, serializer):
         title = get_object_or_404(Title, pk=self.kwargs.get('title_id'))
@@ -117,29 +118,25 @@ class ReviewsViewSet(viewsets.ModelViewSet):
         serializer.save(author=self.request.user, title=title)
 
 
-class OneReviewsViewSet(viewsets.ModelViewSet):
-    serializer_class = ReviewSerializer
-    filter_backends = (DjangoFilterBackend,)
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly,
-                          IsAuthorOrReadOnly]
-    
-    def get_queryset(self):
-        title = get_object_or_404(Title, pk=self.kwargs.get('review_id'))
-        return title.review
-
-    def perform_update(self, serializer):
-        title = get_object_or_404(Title, pk=self.kwargs.get('review_id'))
-        serializer.save(author=self.request.user, title=title)
-
-    def destroy(self, request, *args, **kwargs):
-        instance = self.get_object()
-        self.perform_destroy(instance)
-
-
 class CommentsViewSet(viewsets.ModelViewSet):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
     filter_backends = (DjangoFilterBackend,)
-    filterset_fields = ('text', 'author')
     permission_classes = [permissions.IsAuthenticatedOrReadOnly,
                           IsAuthorOrReadOnly]
+
+    def get_queryset(self):
+        if self.kwargs.get('comment_id'):
+            return Comment.objects.filter(pk=self.kwargs.get('comment_id'))
+        
+        return Comment.objects.filter(review=self.kwargs.get('review_id'))
+
+    def perform_create(self, serializer):
+        review = get_object_or_404(Review, pk=self.kwargs.get('review_id'))
+        serializer.save(author=self.request.user, review=review)
+
+
+    def perform_update(self, serializer):
+        review = get_object_or_404(Review, pk=self.kwargs.get('review_id'))
+        serializer.save(author=self.request.user, review=review)
+
