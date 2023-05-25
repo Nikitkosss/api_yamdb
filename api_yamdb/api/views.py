@@ -40,8 +40,6 @@ class ReviewsViewSet(viewsets.ModelViewSet):
     filter_backends = (DjangoFilterBackend,)
     filterset_fields = ('text', 'author')
     permission_classes = [AuthenticatedPrivilegedUsersOrReadOnly,]
-
-    
     
 
 class CommentsViewSet(viewsets.ModelViewSet):
