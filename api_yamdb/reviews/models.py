@@ -72,6 +72,15 @@ class Review(models.Model):
     # дата отзыва
     pub_date = models.DateTimeField(auto_now_add=True, db_index=True)
 
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["author", "title"],
+                name='constraint_author_title'
+            ),
+        ]
+        # unique_together = ('author', 'title',)
+
 
 class Comment(models.Model):
     # автор комментария

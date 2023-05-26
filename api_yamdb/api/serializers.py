@@ -28,6 +28,13 @@ class TitleSerializer(serializers.ModelSerializer):
         fields = '__all__'
         model = Title
 
+    rating = serializers.SerializerMethodField()
+
+    def get_rating(self, object):
+        return Review.objects.filter(
+            title=object.id
+        ).aggregate(rating=Avg("score"))['rating']
+
 
 class TitleSerializerForCreate(serializers.ModelSerializer):
     genre = serializers.SlugRelatedField(
@@ -42,8 +49,6 @@ class TitleSerializerForCreate(serializers.ModelSerializer):
         required=True
     )
 
-    raiting = serializers.SerializerMethodField()
-
     class Meta:
         fields = '__all__'
         model = Title
@@ -54,17 +59,17 @@ class TitleSerializerForCreate(serializers.ModelSerializer):
             raise serializers.ValidationError('Проверьте год релиза!')
         return value
 
-    def get_raiting(self, object):
-        return Review.objects.filter(
-            title=object.id
-        ).aggregate(rating=Avg("score"))['rating']
-
 
 class ReviewSerializer(serializers.ModelSerializer):
     author = serializers.SlugRelatedField(
         read_only=True, slug_field='username',
         default=serializers.CurrentUserDefault()
     )
+
+    def validate(self, data):
+        if data['score'] > 10:
+            raise serializers.ValidationError("Максимальная оценка - 10 !")
+        return data
 
     class Meta:
         model = Review
