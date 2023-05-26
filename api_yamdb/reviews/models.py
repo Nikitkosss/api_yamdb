@@ -31,7 +31,7 @@ class Genre(models.Model):
 class Title(models.Model):
     category = models.ForeignKey(
         Сategory,
-        on_delete=models.PROTECT,
+        on_delete=models.CASCADE,
         related_name='titles',
         verbose_name='Категория'
     )
