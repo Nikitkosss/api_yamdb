@@ -1,7 +1,9 @@
 import datetime as dt
+
 from django.contrib.auth import get_user_model
+from django.db.models import Avg
 from rest_framework import serializers
-from reviews.models import Genre, Title, Сategory, Comment, Review
+from reviews.models import Comment, Genre, Review, Title, Сategory
 
 User = get_user_model()
 
@@ -40,6 +42,8 @@ class TitleSerializerForCreate(serializers.ModelSerializer):
         required=True
     )
 
+    raiting = serializers.SerializerMethodField()
+
     class Meta:
         fields = '__all__'
         model = Title
@@ -50,6 +54,11 @@ class TitleSerializerForCreate(serializers.ModelSerializer):
             raise serializers.ValidationError('Проверьте год релиза!')
         return value
 
+    def get_raiting(self, object):
+        return Review.objects.filter(
+            title=object.id
+        ).aggregate(rating=Avg("score"))['rating']
+
 
 class ReviewSerializer(serializers.ModelSerializer):
     author = serializers.SlugRelatedField(
@@ -59,17 +68,8 @@ class ReviewSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Review
-        # fields = '__all__'
-        exclude = ('title',)
+        fields = ('id', 'text', 'author', 'score', 'pub_date')
         read_only_fields = ('author', 'title')
-        # многократно используемый валидатор
-        validators = [
-            serializers.UniqueTogetherValidator(
-                queryset=Review.objects.all(),
-                fields=['title', 'author'],
-                message='Отзыв на это произведение Вами уже написан!'
-            )
-        ]
 
 
 class CommentSerializer(serializers.ModelSerializer):
@@ -79,11 +79,6 @@ class CommentSerializer(serializers.ModelSerializer):
         default=serializers.CurrentUserDefault()
     )
 
-    commenting = serializers.SlugRelatedField(
-        queryset=User.objects.all(),
-        slug_field='username'
-    )
-
     class Meta:
         model = Comment
-        fields = '__all__'
+        fields = ('id', 'text', 'author', 'pub_date')

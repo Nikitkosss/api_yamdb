@@ -4,7 +4,7 @@ from string import digits
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.mail import send_mail
-from rest_framework import status, viewsets, filters
+from rest_framework import filters, status, viewsets
 from rest_framework.decorators import action, api_view
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.permissions import IsAuthenticated

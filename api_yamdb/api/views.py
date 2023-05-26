@@ -1,12 +1,13 @@
+from api.mixins import CreateListDestroyViewSet
 from api.serializers import (CommentSerializer, GenreSerializer,
                              ReviewSerializer, TitleSerializer,
-                             СategorySerializer, TitleSerializerForCreate)
+                             TitleSerializerForCreate, СategorySerializer)
+from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import filters, viewsets
+from rest_framework import filters, serializers, viewsets
 from reviews.models import Comment, Genre, Review, Title, Сategory
-from users.permissions import (ListOrAdminModeratOnly,
-                               AuthenticatedPrivilegedUsersOrReadOnly)
-from api.mixins import CreateListDestroyViewSet
+from users.permissions import (AuthenticatedPrivilegedUsersOrReadOnly,
+                               ListOrAdminModeratOnly)
 
 
 class CategoriesViewSet(CreateListDestroyViewSet):
@@ -40,16 +41,41 @@ class TitlesViewSet(viewsets.ModelViewSet):
 
 
 class ReviewsViewSet(viewsets.ModelViewSet):
-    queryset = Review.objects.all()
     serializer_class = ReviewSerializer
     filter_backends = (DjangoFilterBackend,)
-    filterset_fields = ('text', 'author')
+    filterset_fields = ('text', 'author', 'title')
     permission_classes = [AuthenticatedPrivilegedUsersOrReadOnly, ]
+
+    def get_queryset(self):
+        if self.kwargs.get('review_id'):
+            return Review.objects.filter(pk=self.kwargs.get('review_id'))
+        return Review.objects.filter(title=self.kwargs.get('title_id'))
+
+    def perform_create(self, serializer):
+        title = get_object_or_404(Title, pk=self.kwargs.get('title_id'))
+        if Review.objects.filter(author=self.request.user, title=title):
+            raise serializers.ValidationError(
+                'Отзыв на это произведение Вами уже написан!'
+            )
+        serializer.save(author=self.request.user, title=title)
 
 
 class CommentsViewSet(viewsets.ModelViewSet):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
     filter_backends = (DjangoFilterBackend,)
-    filterset_fields = ('text', 'author')
     permission_classes = [AuthenticatedPrivilegedUsersOrReadOnly, ]
+
+    def get_queryset(self):
+        if self.kwargs.get('comment_id'):
+            return Comment.objects.filter(pk=self.kwargs.get('comment_id'))
+
+        return Comment.objects.filter(review=self.kwargs.get('review_id'))
+
+    def perform_create(self, serializer):
+        review = get_object_or_404(Review, pk=self.kwargs.get('review_id'))
+        serializer.save(author=self.request.user, review=review)
+
+    def perform_update(self, serializer):
+        review = get_object_or_404(Review, pk=self.kwargs.get('review_id'))
+        serializer.save(author=self.request.user, review=review)
