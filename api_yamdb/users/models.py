@@ -13,7 +13,7 @@ ROLE_CHOICES = (
 
 
 class User(AbstractUser):
-    """ Переопределение модели User. 
+    """ Переопределение модели User.
     Модель расширена свойствами role и bio."""
 
     role = models.CharField(
