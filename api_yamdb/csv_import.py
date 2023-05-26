@@ -21,9 +21,9 @@ contents4 = csv.reader(file_review)
 contents5 = csv.reader(file_titles)
 contents6 = csv.reader(file_users)
 
-insert_records = "INSERT INTO reviews_сategory (id, slug, name) VALUES(?, ?, ?)"
+insert_records = "INSERT INTO reviews_сategory (id, name, slug) VALUES(?, ?, ?)"
 # insert_records1 = "INSERT INTO auth_group (id, slug, name) VALUES(?, ?, ?)"
-insert_records2 = "INSERT INTO reviews_genre (id, slug, name) VALUES(?, ?, ?)"
+insert_records2 = "INSERT INTO reviews_genre (id, name, slug) VALUES(?, ?, ?)"
 insert_records3 = "INSERT INTO reviews_title_genre (id, title_id, genre_id) VALUES(?, ?, ?)"
 insert_records4 = "INSERT INTO reviews_title (id, name, year, category_id) VALUES(?, ?, ?, ?)"
 # insert_records5 = "INSERT INTO reviews_сategory (id, slug, name) VALUES(?, ?, ?)"
