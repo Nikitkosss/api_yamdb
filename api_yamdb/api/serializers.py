@@ -2,7 +2,7 @@ import datetime as dt
 
 from rest_framework import serializers
 from reviews.models import Genre, Title, User, Сategory, Comment, Review
-
+from django.db.models import Avg
 
 
 class SignUpSerializer(serializers.ModelSerializer):
@@ -53,13 +53,8 @@ class TitleSerializer(serializers.ModelSerializer):
         required=True
     )
 
-<<<<<<< Updated upstream
-=======
     raiting = serializers.SerializerMethodField()
 
-    gg = serializers.SerializerMethodField()
-
->>>>>>> Stashed changes
     class Meta:
         fields = '__all__'
         model = Title
@@ -69,20 +64,10 @@ class TitleSerializer(serializers.ModelSerializer):
         if value > year:
             raise serializers.ValidationError('Проверьте год релиза!')
         return value
-<<<<<<< Updated upstream
-
-=======
     
     def get_raiting(self, object):
         return Review.objects.filter(title=object.id).aggregate(rating=Avg("score"))['rating']
 
-    def get_gg (self, object):
-        titles=Title.objects.filter(id=object.id)
-        ggg = Genre.objects.filter(titles__genre="")
-
-        gg = {'fff':122, 'dddd': 2121}
-        return gg
->>>>>>> Stashed changes
 
 class ReviewSerializer(serializers.ModelSerializer):
     author = serializers.SlugRelatedField(
