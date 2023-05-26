@@ -1,18 +1,18 @@
 from api.mixins import CreateListDestroyViewSet
 from api.serializers import (CommentSerializer, GenreSerializer,
                              ReviewSerializer, TitleSerializer,
-                             TitleSerializerForCreate, СategorySerializer)
+                             TitleSerializerForCreate, CategorySerializer)
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters, serializers, viewsets
-from reviews.models import Comment, Genre, Review, Title, Сategory
+from reviews.models import Comment, Genre, Review, Title, Category
 from users.permissions import (AuthenticatedPrivilegedUsersOrReadOnly,
                                ListOrAdminModeratOnly)
-
+from .filters import FilterTitle
 
 class CategoriesViewSet(CreateListDestroyViewSet):
-    queryset = Сategory.objects.all()
-    serializer_class = СategorySerializer
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
     permission_classes = (ListOrAdminModeratOnly,)
     filter_backends = (filters.SearchFilter, )
     search_fields = ('name',)
@@ -32,10 +32,10 @@ class TitlesViewSet(viewsets.ModelViewSet):
     queryset = Title.objects.all()
     permission_classes = (ListOrAdminModeratOnly,)
     filter_backends = (DjangoFilterBackend, )
-    filterset_fields = ('category', 'genre', 'name', 'year')
+    filterset_class = FilterTitle
 
     def get_serializer_class(self):
-        if self.action in ('create', 'update'):
+        if self.request.method in ['POST', 'PATCH']:
             return TitleSerializerForCreate
         return TitleSerializer
 

@@ -4,7 +4,7 @@ from django.db import models
 User = get_user_model()
 
 
-class Сategory(models.Model):
+class Category(models.Model):
     slug = models.SlugField(
         max_length=50,
         unique=True,
@@ -30,7 +30,7 @@ class Genre(models.Model):
 
 class Title(models.Model):
     category = models.ForeignKey(
-        Сategory,
+        Category,
         on_delete=models.CASCADE,
         related_name='titles',
         verbose_name='Категория'
