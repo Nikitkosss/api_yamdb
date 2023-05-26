@@ -3,15 +3,15 @@ import datetime as dt
 from django.contrib.auth import get_user_model
 from django.db.models import Avg
 from rest_framework import serializers
-from reviews.models import Comment, Genre, Review, Title, Сategory
+from reviews.models import Comment, Genre, Review, Title, Category
 
 User = get_user_model()
 
 
-class СategorySerializer(serializers.ModelSerializer):
+class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         fields = ('name', 'slug')
-        model = Сategory
+        model = Category
 
 
 class GenreSerializer(serializers.ModelSerializer):
@@ -22,7 +22,7 @@ class GenreSerializer(serializers.ModelSerializer):
 
 class TitleSerializer(serializers.ModelSerializer):
     genre = GenreSerializer(many=True,)
-    category = СategorySerializer()
+    category = CategorySerializer()
 
     class Meta:
         fields = '__all__'
@@ -38,7 +38,7 @@ class TitleSerializerForCreate(serializers.ModelSerializer):
     )
     category = serializers.SlugRelatedField(
         slug_field='slug',
-        queryset=Сategory.objects.all(),
+        queryset=Category.objects.all(),
         required=True
     )
 
