@@ -76,8 +76,10 @@ class Review(models.Model):
         constraints = [
             models.UniqueConstraint(
                 fields=["author", "title"],
-                name='constraint_author_title'),
+                name='constraint_author_title'
+            ),
         ]
+        # unique_together = ('author', 'title',)
 
 
 class Comment(models.Model):
@@ -89,4 +91,5 @@ class Comment(models.Model):
         Review, on_delete=models.CASCADE, related_name='comments')
     # текст комментария
     text = models.TextField()
+    # дата комментария
     pub_date = models.DateTimeField(auto_now_add=True, db_index=True)
