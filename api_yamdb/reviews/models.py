@@ -72,6 +72,13 @@ class Review(models.Model):
     # дата отзыва
     pub_date = models.DateTimeField(auto_now_add=True, db_index=True)
 
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["author", "title"],
+                name='constraint_author_title'),
+        ]
+
 
 class Comment(models.Model):
     # автор комментария
@@ -82,5 +89,4 @@ class Comment(models.Model):
         Review, on_delete=models.CASCADE, related_name='comments')
     # текст комментария
     text = models.TextField()
-    # дата комментария
     pub_date = models.DateTimeField(auto_now_add=True, db_index=True)
