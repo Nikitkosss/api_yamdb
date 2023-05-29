@@ -20,7 +20,7 @@ contents3 = csv.reader(file_genre)
 contents4 = csv.reader(file_review)
 contents5 = csv.reader(file_titles)
 
-insert_records = """ INSERT INTO reviews_сategory
+insert_records = """ INSERT INTO reviews_category
                 (id, slug, name) VALUES(?, ?, ?) """
 insert_records1 = """ INSERT INTO reviews_comment
                 (id,review_id,text,author_id,pub_date)
@@ -44,7 +44,7 @@ cursor.executemany(insert_records3, contents3)
 cursor.executemany(insert_records4, contents4)
 cursor.executemany(insert_records5, contents5)
 
-select_all = "SELECT * FROM reviews_сategory"
+select_all = "SELECT * FROM reviews_category"
 select_all1 = "SELECT * FROM reviews_comment"
 select_all2 = "SELECT * FROM reviews_title_genre"
 select_all3 = "SELECT * FROM reviews_genre"
