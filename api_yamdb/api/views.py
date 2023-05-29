@@ -9,7 +9,7 @@ from reviews.models import Comment, Genre, Review, Title, Category
 from users.permissions import (AuthenticatedPrivilegedUsersOrReadOnly,
                                ListOrAdminModeratOnly)
 from .filters import FilterTitle
-
+from django.db.models import Avg
 
 class CategoriesViewSet(CreateListDestroyViewSet):
     queryset = Category.objects.all()
@@ -35,6 +35,10 @@ class TitlesViewSet(viewsets.ModelViewSet):
     filter_backends = (DjangoFilterBackend, )
     filterset_class = FilterTitle
 
+    def get_queryset(self):
+        return Title.objects.annotate(rating=Avg('reviews__score'))
+
+
     def get_serializer_class(self):
         if self.request.method in ['POST', 'PATCH']:
             return TitleSerializerForCreate
@@ -54,10 +58,6 @@ class ReviewsViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         title = get_object_or_404(Title, pk=self.kwargs.get('title_id'))
-        if Review.objects.filter(author=self.request.user, title=title):
-            raise serializers.ValidationError(
-                'Отзыв на это произведение Вами уже написан!'
-            )
         serializer.save(author=self.request.user, title=title)
 
 
@@ -74,9 +74,15 @@ class CommentsViewSet(viewsets.ModelViewSet):
         return Comment.objects.filter(review=self.kwargs.get('review_id'))
 
     def perform_create(self, serializer):
-        review = get_object_or_404(Review, pk=self.kwargs.get('review_id'))
+        review = get_object_or_404(
+            Review,
+            pk=self.kwargs.get('review_id'),
+            title__id=self.kwargs.get('title_id'))
         serializer.save(author=self.request.user, review=review)
 
     def perform_update(self, serializer):
-        review = get_object_or_404(Review, pk=self.kwargs.get('review_id'))
+        review = get_object_or_404(
+            Review,
+            pk=self.kwargs.get('review_id'),
+            title__id=self.kwargs.get('title_id'))
         serializer.save(author=self.request.user, review=review)

@@ -6,6 +6,7 @@ from rest_framework import serializers
 from reviews.models import Comment, Genre, Review, Title, Category
 
 User = get_user_model()
+MAXSIMUMRATING = 10
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -28,12 +29,7 @@ class TitleSerializer(serializers.ModelSerializer):
         fields = '__all__'
         model = Title
 
-    rating = serializers.SerializerMethodField()
-
-    def get_rating(self, object):
-        return Review.objects.filter(
-            title=object.id
-        ).aggregate(rating=Avg("score"))['rating']
+    rating = serializers.FloatField()
 
 
 class TitleSerializerForCreate(serializers.ModelSerializer):
@@ -67,9 +63,15 @@ class ReviewSerializer(serializers.ModelSerializer):
     )
 
     def validate(self, data):
-        if data['score'] > 10:
-            raise serializers.ValidationError("Максимальная оценка - 10 !")
+        if Review.objects.filter(author=self.request.user, title=data['title']):
+            raise serializers.ValidationError(
+            'Отзыв на это произведение Вами уже написан!'
+        )
+        if data['score'] > MAXSIMUMRATING:
+            raise serializers.ValidationError(f'Максимальная оценка - {MAXSIMUMRATING} !')
         return data
+    
+        
 
     class Meta:
         model = Review
