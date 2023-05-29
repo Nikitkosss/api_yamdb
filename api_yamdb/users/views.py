@@ -10,11 +10,13 @@ from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import AccessToken
+from users.models import User
+from django.contrib.auth.tokens import default_token_generator
 
 from .permissions import AdminAndSuperuserOnly
 from .serializer import UserCreateSerializer, UserSerializer
 
-User = get_user_model()
+
 
 
 @api_view(['POST'])
@@ -27,8 +29,9 @@ def create_user(request):
         return Response(status=status.HTTP_200_OK)
     serializer = UserCreateSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
+    user = serializer.save()
 
-    confirmation_code = ''.join(random.choices(digits, k=5))
+    confirmation_code =  default_token_generator.make_token(user)
     serializer.save(confirmation_code=confirmation_code)
 
     send_mail(
@@ -98,7 +101,7 @@ class UserViewSet(viewsets.ModelViewSet):
                 partial=True,
                 context={'request': request}
             )
-            if serializer.is_valid(raise_exception=True):
-                serializer.save()
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
         serializer = UserSerializer(user)
         return Response(serializer.data)
