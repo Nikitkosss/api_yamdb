@@ -62,23 +62,22 @@ class ReviewSerializer(serializers.ModelSerializer):
     )
 
     def validate(self, data):
+        if "user_id" in self.context:
+            title_id = self.context["title_id"]
+            user_id = self.context["user_id"]
+            if Review.objects.filter(author=user_id, title=title_id):
+                raise serializers.ValidationError(
+                    'Пользователь может оставить только один отзыв !')
 
         if data['score'] > MAXSIMUMRATING:
-            raise serializers.ValidationError(f'Максимальная оценка - {MAXSIMUMRATING} !')
+            raise serializers.ValidationError(
+                f'Максимальная оценка - {MAXSIMUMRATING} !')
         return data
-            
 
     class Meta:
         model = Review
         fields = ('id', 'text', 'author', 'score', 'pub_date')
         read_only_fields = ('author', 'title')
-        validators = [
-            serializers.UniqueTogetherValidator(
-                queryset=model.objects.all(),
-                fields=('author', 'title' ), 
-                message=("Some custom message."))
-        ]
-
 
 
 class CommentSerializer(serializers.ModelSerializer):

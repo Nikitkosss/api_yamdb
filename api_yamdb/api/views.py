@@ -4,12 +4,13 @@ from api.serializers import (CommentSerializer, GenreSerializer,
                              TitleSerializerForCreate, CategorySerializer)
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import filters, serializers, viewsets
+from rest_framework import filters, viewsets
 from reviews.models import Comment, Genre, Review, Title, Category
 from users.permissions import (AuthenticatedPrivilegedUsersOrReadOnly,
                                ListOrAdminModeratOnly)
 from .filters import FilterTitle
 from django.db.models import Avg
+
 
 class CategoriesViewSet(CreateListDestroyViewSet):
     queryset = Category.objects.all()
@@ -38,7 +39,6 @@ class TitlesViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         return Title.objects.annotate(rating=Avg('reviews__score'))
 
-
     def get_serializer_class(self):
         if self.request.method in ['POST', 'PATCH']:
             return TitleSerializerForCreate
@@ -50,6 +50,14 @@ class ReviewsViewSet(viewsets.ModelViewSet):
     filter_backends = (DjangoFilterBackend,)
     filterset_fields = ('text', 'author', 'title')
     permission_classes = [AuthenticatedPrivilegedUsersOrReadOnly, ]
+
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        if self.request.method in ['POST', ]:
+            context["title_id"] = self.kwargs['title_id']
+            context["user_id"] = self.request.user
+            return context
+        return context
 
     def get_queryset(self):
         if self.kwargs.get('review_id'):
