@@ -1,20 +1,20 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
-USER = 'user'
-MODERATOR = 'moderator'
-ADMIN = 'admin'
-
-ROLE_CHOICES = (
-    (USER, 'Пользователь'),
-    (MODERATOR, 'Модератор'),
-    (ADMIN, 'Администратор'),
-)
-
 
 class User(AbstractUser):
-    """ Переопределение модели User. 
+    """ Переопределение модели User.
     Модель расширена свойствами role и bio."""
+
+    USER = 'user'
+    MODERATOR = 'moderator'
+    ADMIN = 'admin'
+
+    ROLE_CHOICES = (
+        (USER, 'Пользователь'),
+        (MODERATOR, 'Модератор'),
+        (ADMIN, 'Администратор'),
+    )
 
     role = models.CharField(
         max_length=20,
@@ -42,12 +42,12 @@ class User(AbstractUser):
 
     @property
     def is_admin(self):
-        return self.role == ADMIN
+        return self.role == self.ADMIN
 
     @property
     def is_user(self):
-        return self.role == USER
+        return self.role == self.USER
 
     @property
     def is_moderator(self):
-        return self.role == MODERATOR
+        return self.role == self.MODERATOR
