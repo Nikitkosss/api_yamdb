@@ -3,6 +3,8 @@ from django.db import models
 
 User = get_user_model()
 
+text_limit = 15
+
 
 class Category(models.Model):
     slug = models.SlugField(
@@ -18,6 +20,9 @@ class Category(models.Model):
     class Meta:
         ordering = ['name']
 
+    def __str__(self):
+        return self.name
+
 
 class Genre(models.Model):
     slug = models.SlugField(
@@ -32,6 +37,9 @@ class Genre(models.Model):
 
     class Meta:
         ordering = ['name']
+
+    def __str__(self):
+        return self.name
 
 
 class Title(models.Model):
@@ -98,7 +106,7 @@ class Review(models.Model):
         ]
 
     def __str__(self):
-        return self.text
+        return self.text[:text_limit]
 
 
 class Comment(models.Model):
@@ -123,4 +131,4 @@ class Comment(models.Model):
         ordering = ['pub_date', ]
 
     def __str__(self):
-        return self.text
+        return self.text[:text_limit]
