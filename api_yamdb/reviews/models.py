@@ -15,6 +15,9 @@ class Category(models.Model):
         verbose_name='Название категории'
     )
 
+    class Meta:
+        ordering = ['name']
+
 
 class Genre(models.Model):
     slug = models.SlugField(
@@ -26,6 +29,9 @@ class Genre(models.Model):
         max_length=256,
         verbose_name='Название категории'
     )
+
+    class Meta:
+        ordering = ['name']
 
 
 class Title(models.Model):
@@ -50,9 +56,13 @@ class Title(models.Model):
         max_length=256,
         verbose_name='Название произведения'
     )
-    year = models.IntegerField(
+    year = models.PositiveSmallIntegerField(
+        db_index=True,
         verbose_name='Год выпуска',
     )
+
+    class Meta:
+        ordering = ['name']
 
     def __str__(self):
         return self.name

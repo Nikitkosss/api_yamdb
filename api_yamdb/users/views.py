@@ -9,8 +9,8 @@ from rest_framework_simplejwt.tokens import AccessToken
 from users.models import User
 from django.contrib.auth.tokens import default_token_generator
 
-from .permissions import AdminAndSuperuserOnly
-from .serializer import UserCreateSerializer, UserSerializer
+from users.permissions import AdminAndSuperuserOnly
+from users.serializer import UserCreateSerializer, UserSerializer
 
 
 @api_view(['POST'])

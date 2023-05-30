@@ -20,22 +20,24 @@ contents3 = csv.reader(file_genre)
 contents4 = csv.reader(file_review)
 contents5 = csv.reader(file_titles)
 
-insert_records = """ INSERT INTO reviews_category
-                (id, slug, name) VALUES(?, ?, ?) """
+insert_records = """ INSERT INTO
+                    reviews_сategory (id, slug, name)
+                    VALUES(?, ?, ?) """
 insert_records1 = """ INSERT INTO reviews_comment
-                (id,review_id,text,author_id,pub_date)
-                VALUES(?, ?, ?, ?, ?) """
+                    (id,review_id,text,author_id,pub_date)
+                    VALUES(?, ?, ?, ?, ?) """
 insert_records2 = """ INSERT INTO reviews_title_genre
                     (id, title_id, genre_id)
                     VALUES(?, ?, ?) """
 insert_records3 = """ INSERT INTO reviews_genre
-                (id, name, slug) VALUES(?, ?, ?) """
+                    (id, name, slug)
+                    VALUES(?, ?, ?) """
 insert_records4 = """ INSERT INTO reviews_review
-                (id, title_id, text, author_id, score, pub_date)
-                VALUES(?, ?, ?, ?, ?, ?) """
+                    (id, title_id, text, author_id, score, pub_date)
+                    VALUES(?, ?, ?, ?, ?, ?) """
 insert_records5 = """ INSERT INTO reviews_title
-                (id, name, year, category_id)
-                VALUES(?, ?, ?, ?) """
+                    (id, name, year, category_id)
+                    VALUES(?, ?, ?, ?) """
 
 cursor.executemany(insert_records, contents)
 cursor.executemany(insert_records1, contents1)

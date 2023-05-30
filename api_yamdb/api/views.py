@@ -1,14 +1,16 @@
-from api.mixins import CreateListDestroyViewSet
-from api.serializers import (CommentSerializer, GenreSerializer,
-                             ReviewSerializer, TitleSerializer,
-                             TitleSerializerForCreate, CategorySerializer)
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters, serializers, viewsets
-from reviews.models import Comment, Genre, Review, Title, Category
+
+from api.mixins import CreateListDestroyViewSet
+from api.serializers import (CategorySerializer, CommentSerializer,
+                             GenreSerializer, ReviewSerializer,
+                             TitleSerializer, TitleSerializerForCreate)
+from reviews.models import Category, Comment, Genre, Review, Title
 from users.permissions import (AuthenticatedPrivilegedUsersOrReadOnly,
                                ListOrAdminModeratOnly)
-from .filters import FilterTitle
+
+from api.filters import FilterTitle
 
 
 class CategoriesViewSet(CreateListDestroyViewSet):
