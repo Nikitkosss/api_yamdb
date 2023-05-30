@@ -1,12 +1,12 @@
 import datetime as dt
 
 from django.contrib.auth import get_user_model
-from django.db.models import Avg
 from rest_framework import serializers
 
 from reviews.models import Category, Comment, Genre, Review, Title
 
 User = get_user_model()
+MAXSIMUMRATING = 10
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -29,12 +29,7 @@ class TitleSerializer(serializers.ModelSerializer):
         fields = '__all__'
         model = Title
 
-    rating = serializers.SerializerMethodField()
-
-    def get_rating(self, object):
-        return Review.objects.filter(
-            title=object.id
-        ).aggregate(rating=Avg("score"))['rating']
+    rating = serializers.FloatField()
 
 
 class TitleSerializerForCreate(serializers.ModelSerializer):
@@ -68,8 +63,16 @@ class ReviewSerializer(serializers.ModelSerializer):
     )
 
     def validate(self, data):
-        if data['score'] > 10:
-            raise serializers.ValidationError("Максимальная оценка - 10 !")
+        if "user_id" in self.context:
+            title_id = self.context["title_id"]
+            user_id = self.context["user_id"]
+            if Review.objects.filter(author=user_id, title=title_id):
+                raise serializers.ValidationError(
+                    'Пользователь может оставить только один отзыв !')
+
+        if data['score'] > MAXSIMUMRATING:
+            raise serializers.ValidationError(
+                f'Максимальная оценка - {MAXSIMUMRATING} !')
         return data
 
     class Meta:

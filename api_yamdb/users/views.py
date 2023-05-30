@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import send_mail
 from rest_framework import filters, status, viewsets
 from rest_framework.decorators import action, api_view
@@ -6,9 +7,8 @@ from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import AccessToken
-from users.models import User
-from django.contrib.auth.tokens import default_token_generator
 
+from users.models import User
 from users.permissions import AdminAndSuperuserOnly
 from users.serializer import UserCreateSerializer, UserSerializer
 
