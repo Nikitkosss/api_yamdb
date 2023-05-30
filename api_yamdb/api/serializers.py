@@ -1,7 +1,6 @@
 import datetime as dt
 
 from django.contrib.auth import get_user_model
-from django.db.models import Avg
 from rest_framework import serializers
 from reviews.models import Comment, Genre, Review, Title, Category
 
@@ -63,20 +62,23 @@ class ReviewSerializer(serializers.ModelSerializer):
     )
 
     def validate(self, data):
-        if Review.objects.filter(author=self.request.user, title=data['title']):
-            raise serializers.ValidationError(
-            'Отзыв на это произведение Вами уже написан!'
-        )
+
         if data['score'] > MAXSIMUMRATING:
             raise serializers.ValidationError(f'Максимальная оценка - {MAXSIMUMRATING} !')
         return data
-    
-        
+            
 
     class Meta:
         model = Review
         fields = ('id', 'text', 'author', 'score', 'pub_date')
         read_only_fields = ('author', 'title')
+        validators = [
+            serializers.UniqueTogetherValidator(
+                queryset=model.objects.all(),
+                fields=('author', 'title' ), 
+                message=("Some custom message."))
+        ]
+
 
 
 class CommentSerializer(serializers.ModelSerializer):
